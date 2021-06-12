@@ -35,13 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!count($errors)) {
         // getting user from db
 
-        $sql = "SELECT '*' FROM users WHERE email='$email' LIMIT 1";
+        $sql = "SELECT * FROM users WHERE email='$email' LIMIT 1";
 
         $result = $conn->query($sql);
-
-        $data = mysqli_fetch_assoc($result);
-
-        jsAlert($data['email']);
+        $data = $result->fetch_assoc();
 
         if(!password_verify($password, $data['password'])) {
             $errors['check_fail'] = 'Either email/password is wrong.';
@@ -49,6 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (!count($errors)) {
 
+            $_SESSION['is_logged'] = true;
+            $_SESSION['name'] = $data['name'];
+            $_SESSION['email'] = $data['email'];
             $_SESSION['success'] = 'Login Successful';
 
             header('Location: '. baseUrl());
@@ -75,6 +75,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <?php
                     if (array_key_exists('email', $errors)) {
                         echo '<span class="error">'. $errors['email'] .'</span>';
+                    } elseif (array_key_exists('check_fail', $errors)) {
+                        echo '<span class="error">'. $errors['check_fail'] .'</span>';
                     }
                     ?>
                 </div>
@@ -91,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Check me out</label>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Login</button>
             </form>
         </div>
     </div>
