@@ -4,3 +4,12 @@
 .success {
     color: green;
 }
+
+footer a {
+    color: rgb(199, 188, 188);
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: rgb(177, 172, 172);
+}
